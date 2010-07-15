@@ -57,6 +57,7 @@ namespace QComicBook
 			bool preloadPages() const;
 			bool confirmExit() const;
 			bool autoInfo() const;
+			bool fullScreenStart() const;
 			bool fullScreenHideMenu() const;
 			bool fullScreenHideStatusbar() const;
 			bool fullScreenHideToolbar() const;
@@ -85,6 +86,7 @@ namespace QComicBook
 			void preloadPages(bool f);
 			void confirmExit(bool f);
 			void autoInfo(bool f);
+			void fullScreenStart(bool f);
 			void fullScreenHideMenu(bool f);
 			void fullScreenHideStatusbar(bool f);
 			void fullScreenHideToolbar(bool f);
@@ -114,6 +116,7 @@ namespace QComicBook
 			bool m_contscroll;
 			bool m_scrollbars;
 			bool m_preload;
+			bool m_fsstartapp;
 			bool m_fscrhidemenu;
 			bool m_fscrhidestatus;
 			bool m_fscrhidetoolbar;

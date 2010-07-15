@@ -29,6 +29,7 @@
 #define OPT_SMOOTHSCALING            "/SmoothScaling"
 #define OPT_PAGESIZE                 "/PageSize"
 #define OPT_BACKGROUND               "/Background"
+#define OPT_FULLSCREENSTARTAPP	     "/FullScreenStartApp"
 #define OPT_FULLSCREENHIDEMENU       "/FullScreenHideMenu"
 #define OPT_FULLSCREENHIDESTATUS     "/FullScreenHideStatusbar"
 #define OPT_FULLSCREENHIDETOOLBAR    "/FullScreenHideToolbar"
@@ -141,6 +142,7 @@ void ComicBookSettings::load()
 		m_smoothscaling = m_cfg->value(OPT_SMOOTHSCALING, true).toBool();
 		m_pagesize = convert(size2string, m_cfg->value(OPT_PAGESIZE, size2string[0].str).toString());
 		m_bgcolor = m_cfg->value(OPT_BACKGROUND).value<QColor>();
+		m_fsstartapp = m_cfg->value(OPT_FULLSCREENSTARTAPP, true).toBool();
 		m_fscrhidemenu = m_cfg->value(OPT_FULLSCREENHIDEMENU, true).toBool();
 		m_fscrhidestatus = m_cfg->value(OPT_FULLSCREENHIDESTATUS, true).toBool();
 		m_fscrhidetoolbar = m_cfg->value(OPT_FULLSCREENHIDETOOLBAR, false).toBool();
@@ -282,6 +284,11 @@ bool ComicBookSettings::fullScreenHideMenu() const
 bool ComicBookSettings::fullScreenHideStatusbar() const
 {
     return m_fscrhidestatus;
+}
+
+bool ComicBookSettings::fullScreenStart() const
+{
+    return m_fsstartapp;
 }
 
 bool ComicBookSettings::fullScreenHideToolbar() const
@@ -486,6 +493,14 @@ void ComicBookSettings::fullScreenHideStatusbar(bool f)
     if (f != m_fscrhidestatus)
     {
         m_cfg->setValue(GRP_VIEW OPT_FULLSCREENHIDESTATUS, m_fscrhidestatus = f);
+    }
+}
+
+void ComicBookSettings::fullScreenStart(bool f)
+{
+    if (f != m_fsstartapp)
+    {
+        m_cfg->setValue(GRP_VIEW OPT_FULLSCREENSTARTAPP, m_fsstartapp = f);
     }
 }
 

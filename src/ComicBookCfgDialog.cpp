@@ -39,6 +39,7 @@ ComicBookCfgDialog::ComicBookCfgDialog(QWidget *parent, ComicBookSettings *cfg):
     
     connect(pb_color, SIGNAL(clicked()), this, SLOT(showBackgroundDialog()));
 
+    cb_startfullscreen->setChecked(cfg->fullScreenStart());
     cb_hidetoolbar->setChecked(cfg->fullScreenHideToolbar());
     cb_hidemenu->setChecked(cfg->fullScreenHideMenu());
     cb_hidestatus->setChecked(cfg->fullScreenHideStatusbar());
@@ -66,6 +67,7 @@ void ComicBookCfgDialog::accept()
 	//
 	// display
 	cfg->background(bgcolor);
+	cfg->fullScreenStart(cb_startfullscreen->isChecked());
 	cfg->fullScreenHideMenu(cb_hidemenu->isChecked());
 	cfg->fullScreenHideStatusbar(cb_hidestatus->isChecked());
 	cfg->fullScreenHideToolbar(cb_hidetoolbar->isChecked());

@@ -96,7 +96,7 @@ ComicMainWindow::ComicMainWindow(QWidget *parent): QMainWindow(parent), view(NUL
     connect(actionOpenPrevious, SIGNAL(triggered(bool)), this, SLOT(openPrevious()));
     connect(actionSavePageAs, SIGNAL(triggered(bool)), this, SLOT(savePageAs()));
     connect(actionShowInfo, SIGNAL(triggered(bool)), this, SLOT(showInfo()));
-    connect(actionExitFullScreen, SIGNAL(triggered(bool)), this, SLOT(exitFullscreen()));
+    connect(actionExitFullScreen, SIGNAL(triggered(bool)), this, SLOT(close()));
     connect(actionNextPage, SIGNAL(triggered(bool)), this, SLOT(nextPage()));
     connect(actionForwardPage, SIGNAL(triggered(bool)), this, SLOT(forwardPages()));
     connect(actionFirstPage, SIGNAL(triggered(bool)), this, SLOT(firstPage()));
@@ -200,6 +200,19 @@ ComicMainWindow::ComicMainWindow(QWidget *parent): QMainWindow(parent), view(NUL
     thumbnailLoader = new ThumbnailLoaderThread();
     connect(thumbnailLoader, SIGNAL(thumbnailLoaded(const Thumbnail &)), thumbswin, SLOT(setThumbnail(const Thumbnail &)));
     thumbnailLoader->start();
+
+    if (cfg->fullScreenStart()) {
+        if (cfg->fullScreenHideMenu())
+                menuBar()->hide();
+        if (cfg->fullScreenHideStatusbar())
+                statusbar->hide();
+        if (cfg->fullScreenHideToolbar())
+        {
+                toolBar->toggleViewAction()->setChecked(false);
+                toolBar->hide();
+        }
+        showFullScreen();
+    }
 }
 
 ComicMainWindow::~ComicMainWindow()
@@ -237,25 +250,19 @@ void ComicMainWindow::setupContextMenu()
     pageinfo->setFrameStyle(QFrame::Box | QFrame::Raised);
     QWidgetAction *actionPageInfo = new QWidgetAction(this);
     actionPageInfo->setDefaultWidget(pageinfo);
-    
-    cmenu->addAction(actionNextPage);
-    cmenu->addAction(actionPreviousPage);
+  
+    cmenu->addMenu(menuBookmarks);
     cmenu->addSeparator();
-    cmenu->addAction(actionFitWidth);
-    cmenu->addAction(actionFitHeight);
-    cmenu->addAction(actionWholePage);
-    cmenu->addAction(actionOriginalSize);
-    cmenu->addAction(actionBestFit);
+    cmenu->addAction(actionOpenArchive);
+    cmenu->addAction(actionOpenNext);
+    cmenu->addAction(actionOpenPrevious);
     cmenu->addSeparator();
-    cmenu->addAction(actionRotateRight);
-    cmenu->addAction(actionRotateLeft);
-    cmenu->addAction(actionNoRotation);
+    cmenu->addMenu(menuNavigation);
     cmenu->addSeparator();
-    cmenu->addAction(actionTwoPages);
-    cmenu->addAction(actionMangaMode);
+    cmenu->addMenu(menuView);
     cmenu->addSeparator();
     cmenu->addAction(actionFullscreen);
-    cmenu->addAction(actionPageInfo);
+    cmenu->addAction(actionQuit);
 }
 
 void ComicMainWindow::setupComicImageView()
