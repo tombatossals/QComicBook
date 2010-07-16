@@ -211,7 +211,8 @@ ComicMainWindow::ComicMainWindow(QWidget *parent): QMainWindow(parent), view(NUL
                 toolBar->toggleViewAction()->setChecked(false);
                 toolBar->hide();
         }
-        showFullScreen();
+	view->showFullScreen();
+	view->raise();
     }
 }
 
