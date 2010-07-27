@@ -346,8 +346,6 @@
         </widget>
        </item>
        <item>
-<<<<<<< HEAD
-=======
         <layout class="QHBoxLayout" name="horizontalLayout_5">
          <item>
           <widget class="QLabel" name="label_3">
@@ -369,7 +367,6 @@
         </layout>
        </item>
        <item>
->>>>>>> upstream/master
         <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
