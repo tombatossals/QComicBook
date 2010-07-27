@@ -6,6 +6,7 @@ INCLUDE_DIRECTORIES(
 
 SET(qcomicbook_src
 	ArchiversConfiguration.cpp
+        ArchiverHint.cpp
 	ArchiverStatus.cpp
 	ArchiverStrategy.cpp
 	AceArchiverStrategy.cpp
@@ -32,6 +33,7 @@ SET(qcomicbook_src
 	ImgDirSink.cpp
 	LoaderThreadBase.cpp
 	PageLoaderThread.cpp
+        PrintProgressDialog.cpp
 	ImgSinkFactory.cpp
 	GoToPageWidget.cpp
 	ListViewThumbnail.cpp
@@ -40,6 +42,7 @@ SET(qcomicbook_src
 	Page.cpp
 	PageWidget.cpp
 	PageViewBase.cpp
+        PrinterThread.cpp
 	SimplePageView.cpp
 	ContinuousPageView.cpp
         RecentFilesMenu.cpp
@@ -68,6 +71,8 @@ SET(qcomicbook_moc_hdrs
 	ThumbnailLoaderThread.h
 	GoToPageWidget.h 
 	PageWidget.h
+        PrinterThread.h
+        PrintProgressDialog.h
         RecentFilesMenu.h
 	StatusBar.h 
         SystemInfoDialog.h
@@ -82,6 +87,7 @@ SET(qcomicbook_ui
 	BookmarkManager.ui
 	ComicMainWindow.ui
 	GoToPageWidget.ui
+        PrintProgressDialog.ui
 	SystemInfoDialog.ui
 )
 

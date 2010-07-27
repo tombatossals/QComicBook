@@ -1,7 +1,7 @@
 /*
  * This file is a part of QComicBook.
  *
- * Copyright (C) 2005-2009 Pawel Stolowski <stolowski@gmail.com>
+ * Copyright (C) 2005-2010 Pawel Stolowski <stolowski@gmail.com>
  *
  * QComicBook is free software; you can redestribute it and/or modify it
  * under terms of GNU General Public License by Free Software Foundation.
@@ -21,14 +21,10 @@
 
 using namespace QComicBook;
 
-ArchiversConfiguration* ArchiversConfiguration::cfg(NULL);
-
 ArchiversConfiguration& ArchiversConfiguration::instance()
 {
-    if (!cfg) {
-        cfg = new ArchiversConfiguration();
-    }
-    return *cfg;
+    static ArchiversConfiguration cfg;
+    return cfg;
 }
 
 ArchiversConfiguration::ArchiversConfiguration()
@@ -52,7 +48,6 @@ ArchiversConfiguration::~ArchiversConfiguration()
     {
         delete s;
     }
-    delete cfg;
 }
 
 ArchiverStrategy* ArchiversConfiguration::findStrategy(const QString &filename) const
@@ -137,7 +132,27 @@ QList<ArchiverStatus> ArchiversConfiguration::getArchiversStatus() const
     foreach (ArchiverStrategy *s, archivers)
     {
         status.append(ArchiverStatus(*s));
+
     }
     return status;
 
+}
+
+QList<ArchiverHint> ArchiversConfiguration::getHints() const
+{
+    QList<ArchiverHint> hints;
+    bool all_supported(true);
+    foreach (ArchiverStrategy *s, archivers)
+    {
+        hints.append(s->getHints());
+        all_supported = all_supported && s->isSupported();
+    }
+    if (!all_supported)
+    {
+        hints.append(ArchiverHint(tr("Some archives are not supported because essential external utilities are missing. "
+                       "Please install required executables and restart QComicBook. "
+                       "Note: if more than one executable is listed for given archive type, then it is sufficient to install "
+                       " just one of them."), ArchiverHint::Error));
+    }
+    return hints;
 }

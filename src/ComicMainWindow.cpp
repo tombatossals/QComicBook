@@ -34,6 +34,8 @@
 #include "GoToPageWidget.h"
 #include "PageLoaderThread.h"
 #include "RecentFilesMenu.h"
+#include "PrinterThread.h"
+#include "PrintProgressDialog.h"
 #include <QMenu>
 #include <QStringList>
 #include <QAction>
@@ -46,6 +48,8 @@
 #include <QWidgetAction>
 #include <QList>
 #include <QUrl>
+#include <QPrinter>
+#include <QPrintDialog>
 #include <QDebug>
 
 using namespace QComicBook;
@@ -59,6 +63,8 @@ ComicMainWindow::ComicMainWindow(QWidget *parent): QMainWindow(parent), view(NUL
     
     cfg = &ComicBookSettings::instance();
     cfg->restoreGeometry(this);
+
+    printer = new QPrinter();
 
     pageLoader = new PageLoaderThread();
 
@@ -95,6 +101,7 @@ ComicMainWindow::ComicMainWindow(QWidget *parent): QMainWindow(parent), view(NUL
     connect(actionOpenDirectory, SIGNAL(triggered(bool)), this, SLOT(browseDirectory()));
     connect(actionOpenNext, SIGNAL(triggered(bool)), this, SLOT(openNext()));
     connect(actionOpenPrevious, SIGNAL(triggered(bool)), this, SLOT(openPrevious()));
+    connect(actionPrint, SIGNAL(triggered(bool)), this, SLOT(openPrintDialog()));
     connect(actionSavePageAs, SIGNAL(triggered(bool)), this, SLOT(savePageAs()));
     connect(actionShowInfo, SIGNAL(triggered(bool)), this, SLOT(showInfo()));
     connect(actionExitFullScreen, SIGNAL(triggered(bool)), this, SLOT(close()));
@@ -122,8 +129,7 @@ ComicMainWindow::ComicMainWindow(QWidget *parent): QMainWindow(parent), view(NUL
     //
     // File menu
     menuRecentFiles = new RecentFilesMenu(tr("Recently opened"), this, 10);
-    menuFile->insertMenu(actionSavePageAs, menuRecentFiles);
-    menuFile->insertSeparator(actionSavePageAs);
+    menuFile->insertMenu(actionOpenNext, menuRecentFiles);
     connect(menuRecentFiles, SIGNAL(selected(const QString &)), this, SLOT(recentSelected(const QString &)));
     connect(menuRecentFiles, SIGNAL(cleanupRequest()), menuRecentFiles, SLOT(removeAll()));
     connect(actionClose, SIGNAL(triggered()), this, SLOT(closeSink()));
@@ -232,6 +238,7 @@ ComicMainWindow::~ComicMainWindow()
     pageLoader->wait();
     thumbnailLoader->wait();
     
+    delete printer;
     delete pageLoader;
     delete thumbnailLoader;
     
@@ -339,6 +346,7 @@ void ComicMainWindow::enableComicBookActions(bool f)
         actionOpenNext->setEnabled(x);
         actionOpenPrevious->setEnabled(x);
 	actionSavePageAs->setEnabled(x);
+        actionPrint->setEnabled(x);
 
         //
         // view menu
@@ -886,6 +894,23 @@ void ComicMainWindow::savePageAs()
 	}
 }
 
+void ComicMainWindow::openPrintDialog()
+{
+    QPrintDialog printdlg(printer, this);
+    printdlg.setMinMax(1, sink->numOfImages());
+    if (printdlg.exec() == QDialog::Accepted)
+    {
+        PrintProgressDialog *progressdlg = new PrintProgressDialog(this);
+        printThread = new PrinterThread(sink, printer, printdlg.printRange(), printdlg.fromPage(), printdlg.toPage());
+        connect(printThread, SIGNAL(printing(int)), progressdlg, SLOT(setPage(int)));
+        connect(printThread, SIGNAL(finished()), progressdlg, SLOT(close()));
+        connect(printThread, SIGNAL(finished()), this, SLOT(printingFinished()));
+        connect(progressdlg, SIGNAL(abort()), printThread, SLOT(abort()));
+        progressdlg->show();
+        printThread->start();
+    }
+}
+
 void ComicMainWindow::bookmarkSelected(QAction *action) 
 {
         Bookmark b;
@@ -931,4 +956,9 @@ void ComicMainWindow::reconfigureDisplay()
     view->setSmallCursor(cfg->smallCursor());
     view->showPageNumbers(cfg->embedPageNumbers());
     view->setBackground(cfg->background());
+}
+
+void ComicMainWindow::printingFinished()
+{
+    printThread->deleteLater();
 }

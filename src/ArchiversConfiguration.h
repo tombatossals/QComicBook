@@ -1,7 +1,7 @@
 /*
  * This file is a part of QComicBook.
  *
- * Copyright (C) 2005-2009 Pawel Stolowski <stolowski@gmail.com>
+ * Copyright (C) 2005-2010 Pawel Stolowski <stolowski@gmail.com>
  *
  * QComicBook is free software; you can redestribute it and/or modify it
  * under terms of GNU General Public License by Free Software Foundation.
@@ -13,6 +13,7 @@
 #ifndef __ARCHIVERS_CONFIGURATION_H
 #define __ARCHIVERS_CONFIGURATION_H
 
+#include <QObject>
 #include <QList>
 #include <QStringList>
 #include "ArchiverStatus.h"
@@ -21,7 +22,7 @@ namespace QComicBook
 {
     class ArchiverStrategy;
 
-    class ArchiversConfiguration
+    class ArchiversConfiguration: public QObject
     {
     public:
         static ArchiversConfiguration& instance();
@@ -30,13 +31,13 @@ namespace QComicBook
         QStringList getListArguments(const QString &filename) const;
         QStringList supportedOpenExtensions() const;
         QList<ArchiverStatus> getArchiversStatus() const;
+        QList<ArchiverHint> getHints() const;
 
     private:
         ArchiversConfiguration();
         ~ArchiversConfiguration();
         ArchiverStrategy* findStrategy(const QString &filename) const;
 
-        static ArchiversConfiguration *cfg;
         QList<ArchiverStrategy *> archivers;
     };
 }
