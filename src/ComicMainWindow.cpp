@@ -60,7 +60,7 @@ ComicMainWindow::ComicMainWindow(QWidget *parent): QMainWindow(parent), view(NUL
     setupUi(this);
     updateCaption();
     setAttribute(Qt::WA_DeleteOnClose);
-    
+ 
     cfg = &ComicBookSettings::instance();
     cfg->restoreGeometry(this);
 
@@ -207,18 +207,11 @@ ComicMainWindow::ComicMainWindow(QWidget *parent): QMainWindow(parent), view(NUL
     connect(thumbnailLoader, SIGNAL(thumbnailLoaded(const Thumbnail &)), thumbswin, SLOT(setThumbnail(const Thumbnail &)));
     thumbnailLoader->start();
 
-    if (cfg->fullScreenStart()) {
-        if (cfg->fullScreenHideMenu())
-                menuBar()->hide();
-        if (cfg->fullScreenHideStatusbar())
-                statusbar->hide();
-        if (cfg->fullScreenHideToolbar())
-        {
-                toolBar->toggleViewAction()->setChecked(false);
-                toolBar->hide();
-        }
-	view->showFullScreen();
-	view->raise();
+    // Fullscreen on start management
+    exitFullscreen();
+    if (cfg->fullScreenStart()) 
+    {
+	toggleFullScreen();
     }
 }
 
@@ -522,8 +515,7 @@ void ComicMainWindow::pageLoaded(const Page &page1, const Page &page2)
 
 void ComicMainWindow::sinkReady(const QString &path)
 {
-	statusbar->setShown(actionToggleStatusbar->isChecked() && !(isFullScreen() && cfg->fullScreenHideStatusbar())); //applies back user's statusbar&toolbar preferences
-	//toolbar->setShown(actiontoggleToolbar->isOn() && !(isFullScreen() && cfg->fullScreenHideToolbar()));
+	statusbar->setShown(actionToggleStatusbar->isChecked() && !(isFullScreen())); //applies back user's statusbar&toolbar preferences
 
         menuRecentFiles->add(path);
 
@@ -552,8 +544,7 @@ void ComicMainWindow::sinkReady(const QString &path)
 
 void ComicMainWindow::sinkError(int code)
 {
-	statusbar->setShown(actionToggleStatusbar->isChecked() && !(isFullScreen() && cfg->fullScreenHideStatusbar())); //applies back user's statusbar&toolbar preferences
-	//toolbar->setShown(actiontoggleToolbar->isOn() && !(isFullScreen() && cfg->fullScreenHideToolbar()));
+	statusbar->setShown(actionToggleStatusbar->isChecked() && !(isFullScreen())); //applies back user's statusbar&toolbar preferences
 
         QString msg;
         switch (code)
@@ -645,17 +636,28 @@ void ComicMainWindow::toggleFullScreen()
         else
         {
 		savedToolbarState = toolBar->toggleViewAction()->isChecked();
-
-                if (cfg->fullScreenHideMenu())
-                        menuBar()->hide();
-                if (cfg->fullScreenHideStatusbar())
-                        statusbar->hide();
-                if (cfg->fullScreenHideToolbar())
-		{
-			toolBar->toggleViewAction()->setChecked(false);
-                        toolBar->hide();
-		}
+                menuBar()->hide();
+                statusbar->hide();
+		toolBar->toggleViewAction()->setChecked(false);
+                toolBar->hide();
                 showFullScreen();
+
+		switch(cfg->fullScreenRotation()) 
+		{
+			case 1:
+				view->resetRotation();
+				view->rotateLeft();
+				break;
+			case 2:
+				view->resetRotation();
+				view->rotateRight();
+				break;
+			default:
+				view->resetRotation();
+				break;
+		}
+		view->activateWindow();
+       		view->raise();
         }
 }
 
@@ -740,10 +742,6 @@ void ComicMainWindow::jumpToPage(int n, bool force)
                 n = 0;
         }
 
-        if (!actionTogglePreserveRotation->isChecked())
-        {
-            view->properties().setAngle(None, false);
-        }
         if ((n != currpage) || force)
         {
             view->gotoPage(n);

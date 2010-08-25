@@ -23,7 +23,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>2</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab">
       <attribute name="title">
@@ -142,41 +142,63 @@
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_hidemenu">
-            <property name="text">
-             <string>Hide menubar</string>
-            </property>
-           </widget>
+           <layout class="QHBoxLayout" name="horizontalLayout_6">
+            <item>
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>Rotation applied on Fullscreen mode</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_4">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QComboBox" name="cb_fullscreenrotation">
+              <item>
+               <property name="text">
+                <string>No Rotation</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Rotate Left</string>
+               </property>
+              </item>
+              <item>
+               <property name="text">
+                <string>Rotate Right</string>
+               </property>
+              </item>
+             </widget>
+            </item>
+           </layout>
           </item>
           <item>
-           <widget class="QCheckBox" name="cb_hidetoolbar">
-            <property name="text">
-             <string>Hide toolbar</string>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QCheckBox" name="cb_hidestatus">
-            <property name="text">
-             <string>Hide statusbar</string>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
             </property>
-           </widget>
+           </spacer>
           </item>
          </layout>
         </widget>
-       </item>
-       <item>
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>37</height>
-          </size>
-         </property>
-        </spacer>
        </item>
       </layout>
      </widget>

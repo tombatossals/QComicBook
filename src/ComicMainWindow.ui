@@ -33,7 +33,7 @@
      <x>0</x>
      <y>0</y>
      <width>1184</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -67,7 +67,6 @@
     <addaction name="actionRotateRight"/>
     <addaction name="actionRotateLeft"/>
     <addaction name="actionNoRotation"/>
-    <addaction name="actionTogglePreserveRotation"/>
     <addaction name="separator"/>
     <addaction name="actionTwoPages"/>
     <addaction name="actionMangaMode"/>

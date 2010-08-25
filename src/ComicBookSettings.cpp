@@ -30,9 +30,7 @@
 #define OPT_PAGESIZE                 "/PageSize"
 #define OPT_BACKGROUND               "/Background"
 #define OPT_FULLSCREENSTARTAPP	     "/FullScreenStartApp"
-#define OPT_FULLSCREENHIDEMENU       "/FullScreenHideMenu"
-#define OPT_FULLSCREENHIDESTATUS     "/FullScreenHideStatusbar"
-#define OPT_FULLSCREENHIDETOOLBAR    "/FullScreenHideToolbar"
+#define OPT_FULLSCREENROTATION	     "/FullScreenRotation"
 #define OPT_STATUSBAR                "/Statusbar"
 #define OPT_FONT                     "/InfoFont"
 #define OPT_SMALLCURSOR              "/SmallCursor"
@@ -143,9 +141,7 @@ void ComicBookSettings::load()
 		m_pagesize = convert(size2string, m_cfg->value(OPT_PAGESIZE, size2string[0].str).toString());
 		m_bgcolor = m_cfg->value(OPT_BACKGROUND).value<QColor>();
 		m_fsstartapp = m_cfg->value(OPT_FULLSCREENSTARTAPP, true).toBool();
-		m_fscrhidemenu = m_cfg->value(OPT_FULLSCREENHIDEMENU, true).toBool();
-		m_fscrhidestatus = m_cfg->value(OPT_FULLSCREENHIDESTATUS, true).toBool();
-		m_fscrhidetoolbar = m_cfg->value(OPT_FULLSCREENHIDETOOLBAR, false).toBool();
+		m_fsrotation = m_cfg->value(OPT_FULLSCREENROTATION, 0).toInt();
 		m_statusbar = m_cfg->value(OPT_STATUSBAR, true).toBool();
 		fontdesc = m_cfg->value(OPT_FONT, QString()).toString();
 		if (fontdesc.isNull() || !m_font.fromString(fontdesc))
@@ -276,24 +272,14 @@ bool ComicBookSettings::autoInfo() const
     return m_autoinfo;
 }
 
-bool ComicBookSettings::fullScreenHideMenu() const
-{
-    return m_fscrhidemenu;
-}
-
-bool ComicBookSettings::fullScreenHideStatusbar() const
-{
-    return m_fscrhidestatus;
-}
-
 bool ComicBookSettings::fullScreenStart() const
 {
     return m_fsstartapp;
 }
 
-bool ComicBookSettings::fullScreenHideToolbar() const
+int ComicBookSettings::fullScreenRotation() const
 {
-    return m_fscrhidetoolbar;
+    return m_fsrotation;
 }
 
 bool ComicBookSettings::showStatusbar() const
@@ -480,22 +466,6 @@ void ComicBookSettings::autoInfo(bool f)
     }
 }
 
-void ComicBookSettings::fullScreenHideMenu(bool f)
-{
-    if (f != m_fscrhidemenu)
-    {
-        m_cfg->setValue(GRP_VIEW OPT_FULLSCREENHIDEMENU, m_fscrhidemenu = f);
-    }
-}
-
-void ComicBookSettings::fullScreenHideStatusbar(bool f)
-{
-    if (f != m_fscrhidestatus)
-    {
-        m_cfg->setValue(GRP_VIEW OPT_FULLSCREENHIDESTATUS, m_fscrhidestatus = f);
-    }
-}
-
 void ComicBookSettings::fullScreenStart(bool f)
 {
     if (f != m_fsstartapp)
@@ -504,11 +474,11 @@ void ComicBookSettings::fullScreenStart(bool f)
     }
 }
 
-void ComicBookSettings::fullScreenHideToolbar(bool f)
+void ComicBookSettings::fullScreenRotation(int n)
 {
-    if (f != m_fscrhidetoolbar)
+    if (n != m_fsrotation)
     {
-        m_cfg->setValue(GRP_VIEW OPT_FULLSCREENHIDETOOLBAR, m_fscrhidetoolbar = f);
+        m_cfg->setValue(GRP_VIEW OPT_FULLSCREENROTATION, m_fsrotation= n);
     }
 }
 

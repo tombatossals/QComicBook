@@ -57,9 +57,7 @@ namespace QComicBook
 			bool confirmExit() const;
 			bool autoInfo() const;
 			bool fullScreenStart() const;
-			bool fullScreenHideMenu() const;
-			bool fullScreenHideStatusbar() const;
-			bool fullScreenHideToolbar() const;
+			int fullScreenRotation() const;
 			bool showStatusbar() const;
 			const QFont& infoFont() const;
 			void restoreGeometry(ComicMainWindow *w) const;
@@ -86,9 +84,7 @@ namespace QComicBook
 			void confirmExit(bool f);
 			void autoInfo(bool f);
 			void fullScreenStart(bool f);
-			void fullScreenHideMenu(bool f);
-			void fullScreenHideStatusbar(bool f);
-			void fullScreenHideToolbar(bool f);
+			void fullScreenRotation(int n);
 			void showStatusbar(bool f);
 			void infoFont(const QFont &f);
 			void saveDockLayout(ComicMainWindow *w);
@@ -116,9 +112,7 @@ namespace QComicBook
 			bool m_scrollbars;
 			bool m_preload;
 			bool m_fsstartapp;
-			bool m_fscrhidemenu;
-			bool m_fscrhidestatus;
-			bool m_fscrhidetoolbar;
+			int  m_fsrotation;
 			Size m_pagesize;
 			bool m_smoothscaling;
 			QString m_lastdir;

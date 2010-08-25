@@ -8,3 +8,5 @@ CMakeCache.txt
 *.cmake
 *.qm
 qcomicbook
+config.h
+install_manifest.txt

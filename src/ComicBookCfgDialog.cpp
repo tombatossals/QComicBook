@@ -16,6 +16,7 @@
 #include <QColorDialog>
 #include <QFontDialog>
 #include <QFileDialog>
+#include <QDebug>
 
 using namespace QComicBook;
 
@@ -41,9 +42,7 @@ ComicBookCfgDialog::ComicBookCfgDialog(QWidget *parent, ComicBookSettings *cfg):
     connect(pb_color, SIGNAL(clicked()), this, SLOT(showBackgroundDialog()));
 
     cb_startfullscreen->setChecked(cfg->fullScreenStart());
-    cb_hidetoolbar->setChecked(cfg->fullScreenHideToolbar());
-    cb_hidemenu->setChecked(cfg->fullScreenHideMenu());
-    cb_hidestatus->setChecked(cfg->fullScreenHideStatusbar());
+    cb_fullscreenrotation->setCurrentIndex(cfg->fullScreenRotation());
     cb_smallcursor->setChecked(cfg->smallCursor());
     cb_embedpagenumbers->setChecked(cfg->embedPageNumbers());
     cb_smoothscaling->setChecked(cfg->smoothScaling());
@@ -71,9 +70,7 @@ void ComicBookCfgDialog::accept()
 	// display
 	cfg->background(bgcolor);
 	cfg->fullScreenStart(cb_startfullscreen->isChecked());
-	cfg->fullScreenHideMenu(cb_hidemenu->isChecked());
-	cfg->fullScreenHideStatusbar(cb_hidestatus->isChecked());
-	cfg->fullScreenHideToolbar(cb_hidetoolbar->isChecked());
+	cfg->fullScreenRotation(cb_fullscreenrotation->currentIndex());
 	cfg->smallCursor(cb_smallcursor->isChecked());
         cfg->embedPageNumbers(cb_embedpagenumbers->isChecked());
 	cfg->smoothScaling(cb_smoothscaling->isChecked());
